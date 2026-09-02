@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure-devops/mcp",
+        "FabricaEscuela20262",
+        "--authentication",
+        "azcli",
+        "--tenant",
+        "99e1e721-7184-498e-8aff-b2ad4e53c1c2"
+      ]
+    }
+  }
+}
