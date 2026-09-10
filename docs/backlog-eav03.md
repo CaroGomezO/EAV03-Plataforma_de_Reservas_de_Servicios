@@ -7,8 +7,10 @@ o cerrar el editor.
 
 - **Proceso:** Agile. **Team:** EAV03 Team. Todo cuelga de la raíz `EAV03` (aún sin sprints).
 - **Códigos de título:** `E-01`, `FE-001`, `HU-0001` (separador ` · `).
-- **Estado a 2026-09-08:** 5 épicas · 15 features · 28 historias, todas en estado *New*,
+- **Estado a 2026-09-10:** 5 épicas · 15 features · 28 historias, todas en estado *New*,
   con criterios de aceptación en Gherkin (en la descripción y en el campo Acceptance Criteria).
+- **Terminología:** el administrador de cada negocio se llama **"propietario"**;
+  **"administrador de la plataforma"** es el super admin (dueño del SaaS).
 - Redactado con el modelo **INVEST + Gherkin** (skill `historias-usuario-invest`), sin
   tecnicismos y sin inventar reglas: lo que falta por decidir está en *Preguntas abiertas*.
 
@@ -21,8 +23,8 @@ o cerrar el editor.
   - HU-0001 · Registrarme como cliente en la plataforma
   - HU-0002 · Iniciar sesión en mi cuenta
   - HU-0003 · Recuperar el acceso a mi cuenta
-- **FE-015 · Gestión de negocios y sus administradores**
-  - HU-0027 · Registrar un negocio y su administrador
+- **FE-015 · Gestión de negocios y sus propietarios**
+  - HU-0027 · Registrar un negocio y la cuenta de su propietario
   - HU-0028 · Desactivar un negocio
 
 ### E-02 · Administración del Negocio
@@ -75,15 +77,15 @@ o cerrar el editor.
 
 ### Multi-negocio e identidad
 - La plataforma es **multi-negocio**. Hay un **administrador de la plataforma**
-  (dueño del SaaS) y **un administrador por cada negocio** (único, no reemplazable).
+  (dueño del SaaS) y **un propietario por cada negocio** (único, no reemplazable).
 - La cuenta del administrador de la plataforma se **siembra manualmente** al desplegar
   (config/BD). Es la única cuenta de todo el sistema que no nace desde la aplicación.
-- El administrador de la plataforma **registra cada negocio + su administrador**
-  (HU-0027). Datos del negocio: **nombre, dirección, identificación fiscal**.
+- El administrador de la plataforma **registra cada negocio + la cuenta de su
+  propietario** (HU-0027). Datos del negocio: **nombre, dirección, identificación fiscal**.
 - Al **desactivar un negocio** (HU-0028): sus proveedores quedan desactivados y sus
   reservas futuras se cancelan.
 - Cada negocio tiene su propio catálogo, proveedores, recursos y políticas, aislados
-  de los demás; los gestiona su administrador.
+  de los demás; los gestiona su propietario.
 - **Cliente:** registro autoservicio. Identificador = correo. Datos obligatorios:
   nombre completo, correo, celular, cédula, dirección de vivienda. Sin verificación
   previa. Sin inicio de sesión con proveedores externos.
@@ -91,14 +93,14 @@ o cerrar el editor.
   Bloqueo tras **5 intentos fallidos en 15 min**. Sesión expira a los **30 min** de
   inactividad. Recuperación por **código OTP al correo, válido 5 min**.
 - No hay roles internos que administrar: un usuario puede ser cliente, proveedor
-  y/o administrador de negocio a la vez.
+  y/o propietario de un negocio a la vez.
 
 ### Catálogo, proveedores y recursos
 - **Servicio:** nombre, duración, descripción, modalidad, precio. Distintas
   duraciones/modalidades = servicios distintos. Un servicio puede tener **uno o
   varios proveedores**; necesita ≥1 para ser reservable.
 - **Proveedor:** nombre completo, ocupación, celular, correo, contraseña. Su cuenta
-  de acceso se crea automáticamente al registrarlo (lo hace el admin del negocio).
+  de acceso se crea automáticamente al registrarlo (lo hace el propietario del negocio).
 - **Recurso:** nombre, tipo, cantidad. Asociado a **un único servicio**, no
   compartible. La **cantidad del recurso = capacidad simultánea del servicio**:
   límite duro, sin sobrecupo, sin reservas solapadas, sin descansos entre citas.
@@ -120,9 +122,9 @@ o cerrar el editor.
 - El cliente solo reserva **para sí mismo**. No se piden datos adicionales al reservar.
 - **Estados de una reserva:** agendada · atendida · cancelada · no-show.
 
-### Operación (proveedor / administrador del negocio)
-- **Solo el administrador del negocio** puede editar o mover reservas, y **solo él**
-  crea reservas a nombre de un cliente (registrando antes al cliente con todos sus datos).
+### Operación (proveedor / propietario)
+- **Solo el propietario** puede editar o mover reservas, y **solo él** crea reservas
+  a nombre de un cliente (registrando antes al cliente con todos sus datos).
 - El **proveedor** solo ve, de cada cita, el **nombre y el teléfono** del cliente
   (más servicio, fecha, hora, estado). Sin notas internas.
 - El proveedor puede **marcar asistencia / no-show** únicamente **después de la hora
@@ -163,7 +165,7 @@ mismo negocio.
 | HU-0016 · Consultar franjas disponibles | ¿Qué datos de cada franja se muestran (proveedor, modalidad, duración, precio)? |
 | HU-0019 · Consultar mis reservas | ¿Se muestran también las reservas pasadas? ¿Por cuánto tiempo? |
 | HU-0009 · Desactivar un proveedor | Si era el único proveedor de un servicio: ¿reservas pendientes de reasignación, canceladas, o se bloquea la desactivación? |
-| HU-0022 · Consultar mi agenda del día | ¿Qué vistas se necesitan (día, semana, lista, calendario)? ¿El administrador ve la agenda de todos los proveedores? |
+| HU-0022 · Consultar mi agenda del día | ¿Qué vistas se necesitan (día, semana, lista, calendario)? ¿El propietario ve la agenda de todos los proveedores? |
 | HU-0028 · Desactivar un negocio | ¿Se puede reactivar un negocio desactivado? ¿Eliminarlo de forma definitiva? |
 
 ---
@@ -223,6 +225,10 @@ Removed (conservan su código antiguo, que **no se reutiliza**).
    generalizadas a cualquier cuenta; FE-001 renombrada a "Registro y autenticación".
 5. **2026-09-04** — Confirmado multi-negocio: añadidas FE-015, HU-0027 y HU-0028;
    E-01 y E-02 actualizadas.
+6. **2026-09-10** — Rename de terminología (pedido del equipo): el "administrador
+   del negocio" pasa a llamarse **"propietario"** en todas las épicas, features e
+   HU. Se conserva "administrador de la plataforma" para el super admin. FE-015
+   renombrada. HU-0002 y HU-0004 ya venían alineadas por el equipo.
 
 > Documento generado para acompañar el backlog en Azure DevOps. Mantener sincronizado
 > a mano si se editan work items directamente en Azure.
