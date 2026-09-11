@@ -7,7 +7,7 @@ o cerrar el editor.
 
 - **Proceso:** Agile. **Team:** EAV03 Team. Todo cuelga de la raíz `EAV03` (aún sin sprints).
 - **Códigos de título:** `E-01`, `FE-001`, `HU-0001` (separador ` · `).
-- **Estado a 2026-09-10:** 5 épicas · 15 features · 28 historias, todas en estado *New*,
+- **Estado a 2026-09-11:** 5 épicas · 15 features · 29 historias, todas en estado *New*,
   con criterios de aceptación en Gherkin (en la descripción y en el campo Acceptance Criteria).
 - **Terminología:** el administrador de cada negocio se llama **"propietario"**;
   **"administrador de la plataforma"** es el super admin (dueño del SaaS).
@@ -24,7 +24,8 @@ o cerrar el editor.
   - HU-0002 · Iniciar sesión en mi cuenta
   - HU-0003 · Recuperar el acceso a mi cuenta
 - **FE-015 · Gestión de negocios y sus propietarios**
-  - HU-0027 · Registrar un negocio y la cuenta de su propietario
+  - HU-0027 · Registrar los datos de un negocio
+  - HU-0029 · Registrar la cuenta del propietario de un negocio
   - HU-0028 · Desactivar un negocio
 
 ### E-02 · Administración del Negocio
@@ -80,8 +81,11 @@ o cerrar el editor.
   (dueño del SaaS) y **un propietario por cada negocio** (único, no reemplazable).
 - La cuenta del administrador de la plataforma se **siembra manualmente** al desplegar
   (config/BD). Es la única cuenta de todo el sistema que no nace desde la aplicación.
-- El administrador de la plataforma **registra cada negocio + la cuenta de su
-  propietario** (HU-0027). Datos del negocio: **nombre, dirección, identificación fiscal**.
+- El administrador de la plataforma registra, en un único formulario/transacción,
+  los **datos del negocio** (HU-0027: nombre, dirección, identificación fiscal,
+  moneda base) y la **cuenta de su propietario** (HU-0029: nombre completo, correo,
+  celular, contraseña) — ambas HU documentan el mismo flujo de alta conjunta, no
+  son pasos separados.
 - Al **desactivar un negocio** (HU-0028): sus proveedores quedan desactivados y sus
   reservas futuras se cancelan.
 - Cada negocio tiene su propio catálogo, proveedores, recursos y políticas, aislados
@@ -208,6 +212,7 @@ El código del título **no coincide** con el ID interno de Azure DevOps.
 | HU-0008 | 52 | HU-0018 | 33 | HU-0028 | 73 |
 | HU-0009 | 53 | HU-0019 | 34 | | |
 | HU-0010 | 54 | HU-0020 | 35 | | |
+| HU-0029 | 89 | | | | |
 
 Los IDs 6, 7, 9, 15, 22, 25–30, 38–40, 45–47, 60–61, 65–70 son los ítems en estado
 Removed (conservan su código antiguo, que **no se reutiliza**).
@@ -229,6 +234,13 @@ Removed (conservan su código antiguo, que **no se reutiliza**).
    del negocio" pasa a llamarse **"propietario"** en todas las épicas, features e
    HU. Se conserva "administrador de la plataforma" para el super admin. FE-015
    renombrada. HU-0002 y HU-0004 ya venían alineadas por el equipo.
+7. **2026-09-11** — HU-0027 dividida en dos (pedido del equipo). Ya no cubre a la
+   vez negocio y propietario: **HU-0027** queda solo con los datos del negocio
+   (nombre, dirección, ID fiscal, moneda base) y **HU-0029** (nueva) se lleva la
+   cuenta del propietario (nombre, correo, celular, contraseña). El flujo real
+   **no cambia**: sigue siendo un único formulario/transacción que crea ambos
+   juntos; la división es solo de las HU y sus criterios de aceptación, para
+   facilitar el tracking. FE-015 actualizada con las 3 HU.
 
 > Documento generado para acompañar el backlog en Azure DevOps. Mantener sincronizado
 > a mano si se editan work items directamente en Azure.
