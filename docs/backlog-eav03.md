@@ -7,10 +7,11 @@ o cerrar el editor.
 
 - **Proceso:** Agile. **Team:** EAV03 Team. Todo cuelga de la raíz `EAV03` (aún sin sprints).
 - **Códigos de título:** `E-01`, `FE-001`, `HU-0001` (separador ` · `).
-- **Estado a 2026-09-11:** 5 épicas · 15 features · 29 historias, todas en estado *New*,
+- **Estado a 2026-09-11:** 5 épicas · 15 features · 28 historias, todas en estado *New*,
   con criterios de aceptación en Gherkin (en la descripción y en el campo Acceptance Criteria).
-- **Terminología:** el administrador de cada negocio se llama **"propietario"**;
-  **"administrador de la plataforma"** es el super admin (dueño del SaaS).
+- **Terminología:** el administrador de cada negocio se llama **"propietario"**. Ya
+  **no existe** el rol "administrador de la plataforma" en el MVP: el registro de
+  negocios es 100% autoservicio (ver punto 8 del historial de cambios).
 - Redactado con el modelo **INVEST + Gherkin** (skill `historias-usuario-invest`), sin
   tecnicismos y sin inventar reglas: lo que falta por decidir está en *Preguntas abiertas*.
 
@@ -21,12 +22,11 @@ o cerrar el editor.
 ### E-01 · Acceso e Identidad
 - **FE-001 · Registro y autenticación**
   - HU-0001 · Registrarme como cliente en la plataforma
+  - HU-0041 · Registrarme como propietario
   - HU-0002 · Iniciar sesión en mi cuenta
   - HU-0003 · Recuperar el acceso a mi cuenta
-- **FE-015 · Gestión de negocios y sus propietarios**
-  - HU-0027 · Registrar los datos de un negocio
-  - HU-0029 · Registrar la cuenta del propietario de un negocio
-  - HU-0028 · Desactivar un negocio
+- **FE-016 · Registro y activación de negocios**
+  - HU-0042 · Crear mi negocio
 
 ### E-02 · Administración del Negocio
 - **FE-002 · Gestión del catálogo de servicios**
@@ -77,17 +77,20 @@ o cerrar el editor.
 ## 2. Reglas de negocio vigentes (decisiones del equipo)
 
 ### Multi-negocio e identidad
-- La plataforma es **multi-negocio**. Hay un **administrador de la plataforma**
-  (dueño del SaaS) y **un propietario por cada negocio** (único, no reemplazable).
-- La cuenta del administrador de la plataforma se **siembra manualmente** al desplegar
-  (config/BD). Es la única cuenta de todo el sistema que no nace desde la aplicación.
-- El administrador de la plataforma registra, en un único formulario/transacción,
-  los **datos del negocio** (HU-0027: nombre, dirección, identificación fiscal,
-  moneda base) y la **cuenta de su propietario** (HU-0029: nombre completo, correo,
-  celular, contraseña) — ambas HU documentan el mismo flujo de alta conjunta, no
-  son pasos separados.
-- Al **desactivar un negocio** (HU-0028): sus proveedores quedan desactivados y sus
-  reservas futuras se cancelan.
+- La plataforma es **multi-negocio**: cada negocio (tenant) tiene sus datos
+  completamente aislados de los demás. **Ya no existe el rol "administrador de la
+  plataforma"** en el MVP (eliminado 2026-09-11).
+- **Registro 100% autoservicio, sin fricción.** No hay ningún admin ni intermediario
+  que apruebe la creación de una cuenta o de un negocio: quedan activos de inmediato.
+- El **propietario** se registra solo (HU-0041) y queda autenticado de inmediato.
+  En el mismo flujo es redirigido a crear su negocio (HU-0042: nombre, dirección,
+  identificación fiscal única, moneda base ISO 4217), que se activa sin aprobación
+  de nadie. El "Usuario Propietario" y el "Negocio" son entidades **completamente
+  separadas** a nivel de datos y arquitectura, aunque la UX las encadena en un
+  único flujo (sin romper la experiencia con dos pasos desconectados).
+- Un negocio tiene un único propietario. **No hay mecanismo de desactivación de
+  negocios en el MVP** (esa capacidad se fue junto con el rol de administrador de
+  la plataforma).
 - Cada negocio tiene su propio catálogo, proveedores, recursos y políticas, aislados
   de los demás; los gestiona su propietario.
 - **Cliente:** registro autoservicio. Identificador = correo. Datos obligatorios:
@@ -155,6 +158,7 @@ por defecto). No se pueden borrar del todo desde la integración usada.
 | Feature de bloqueos y ausencias + sus 2 HU | Fuera del MVP |
 | HU "Actualizar mi horario de atención" | Fuera del MVP |
 | Feature de cuentas y roles internos + sus 3 HU | No hay roles internos que gestionar |
+| **FE-015** (Gestión de negocios por un admin) + **HU-0027, HU-0028, HU-0029** | Pivote 2026-09-11: registro autoservicio, sin rol Administrador de la Plataforma |
 
 También quedan fuera del MVP (sin work item): consecuencias de cancelar fuera de
 plazo, automatización ante no-show, y la gestión de sedes múltiples dentro de un
@@ -170,7 +174,8 @@ mismo negocio.
 | HU-0019 · Consultar mis reservas | ¿Se muestran también las reservas pasadas? ¿Por cuánto tiempo? |
 | HU-0009 · Desactivar un proveedor | Si era el único proveedor de un servicio: ¿reservas pendientes de reasignación, canceladas, o se bloquea la desactivación? |
 | HU-0022 · Consultar mi agenda del día | ¿Qué vistas se necesitan (día, semana, lista, calendario)? ¿El propietario ve la agenda de todos los proveedores? |
-| HU-0028 · Desactivar un negocio | ¿Se puede reactivar un negocio desactivado? ¿Eliminarlo de forma definitiva? |
+| HU-0002 · Iniciar sesión en mi cuenta | ¿A qué pantalla se redirige a un cliente y a un proveedor al iniciar sesión? (el destino del propietario ya está definido) |
+| HU-0042 · Crear mi negocio | ¿Puede el propietario usar la plataforma sin negocio creado todavía? ¿Puede tener más de un negocio con la misma cuenta? |
 
 ---
 
@@ -196,7 +201,7 @@ El código del título **no coincide** con el ID interno de Azure DevOps.
 | FE-004 | 12 | FE-012 | 21 |
 | FE-005 | 13 | FE-013 | 23 |
 | FE-006 | 14 | FE-014 | 24 |
-| FE-007 | 16 | FE-015 | 71 |
+| FE-007 | 16 | FE-016 | 90 |
 | FE-008 | 17 | | |
 
 ### Historias de usuario
@@ -208,14 +213,15 @@ El código del título **no coincide** con el ID interno de Azure DevOps.
 | HU-0004 | 48 | HU-0014 | 37 | HU-0024 | 62 |
 | HU-0005 | 49 | HU-0015 | 41 | HU-0025 | 63 |
 | HU-0006 | 50 | HU-0016 | 31 | HU-0026 | 64 |
-| HU-0007 | 51 | HU-0017 | 32 | HU-0027 | 72 |
-| HU-0008 | 52 | HU-0018 | 33 | HU-0028 | 73 |
+| HU-0007 | 51 | HU-0017 | 32 | HU-0041 | 91 |
+| HU-0008 | 52 | HU-0018 | 33 | HU-0042 | 92 |
 | HU-0009 | 53 | HU-0019 | 34 | | |
 | HU-0010 | 54 | HU-0020 | 35 | | |
-| HU-0029 | 89 | | | | |
 
-Los IDs 6, 7, 9, 15, 22, 25–30, 38–40, 45–47, 60–61, 65–70 son los ítems en estado
-Removed (conservan su código antiguo, que **no se reutiliza**).
+Los IDs 6, 7, 9, 15, 22, 25–30, 38–40, 45–47, 60–61, 65–70, 71–73, 89 son ítems en
+estado Removed (conservan su código antiguo, que **no se reutiliza**). Los últimos
+cuatro (FE-015=71, HU-0027=72, HU-0028=73, HU-0029=89) son del flujo de registro
+por Administrador de la Plataforma, retirado el 2026-09-11.
 
 ---
 
@@ -241,6 +247,22 @@ Removed (conservan su código antiguo, que **no se reutiliza**).
    **no cambia**: sigue siendo un único formulario/transacción que crea ambos
    juntos; la división es solo de las HU y sus criterios de aceptación, para
    facilitar el tracking. FE-015 actualizada con las 3 HU.
+8. **2026-09-11 (mismo día) — Pivote a registro self-service.** El equipo definió
+   3 principios de arquitectura: el registro es **100% autoservicio, sin
+   aprobación** (el negocio queda activo de inmediato); **"Usuario Propietario"**
+   y **"Negocio"** son entidades completamente separadas a nivel de datos; y al
+   registrarse, el usuario queda autenticado y es **redirigido de inmediato** a
+   crear su negocio. Esto **reemplaza por completo** el flujo anterior y **elimina
+   del MVP el rol "Administrador de la Plataforma"** (ni siquiera queda para
+   desactivar negocios). Se retiraron (Removed) FE-015, HU-0027, HU-0028, HU-0029
+   y sus tareas técnicas (incluida la de sembrar la cuenta del super admin, ya sin
+   sentido). Se crearon **FE-016 · Registro y activación de negocios** (bajo E-01)
+   con **HU-0042 · Crear mi negocio**, y **HU-0041 · Registrarme como propietario**
+   (bajo FE-001, junto a HU-0001/02/03) — ambas reutilizan las validaciones de
+   campo que ya existían, sin inventar nada nuevo. Se reescribió **HU-0002** (login)
+   para quitar el escenario de Administrador de la Plataforma. Pendiente del
+   equipo: replanear Sprint 1 (perdió HU-0027 con sus 5 SP y 5 tasks) y crear
+   tasks nuevas para HU-0041/HU-0042.
 
 > Documento generado para acompañar el backlog en Azure DevOps. Mantener sincronizado
 > a mano si se editan work items directamente en Azure.
