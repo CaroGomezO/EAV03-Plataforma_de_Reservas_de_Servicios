@@ -88,9 +88,11 @@ o cerrar el editor.
   de nadie. El "Usuario Propietario" y el "Negocio" son entidades **completamente
   separadas** a nivel de datos y arquitectura, aunque la UX las encadena en un
   único flujo (sin romper la experiencia con dos pasos desconectados).
-- Un negocio tiene un único propietario. **No hay mecanismo de desactivación de
-  negocios en el MVP** (esa capacidad se fue junto con el rol de administrador de
-  la plataforma).
+- Un negocio tiene un único propietario, pero **un propietario puede tener varios
+  negocios** con la misma cuenta (confirmado 2026-09-11). El propietario queda
+  **bloqueado del resto de la plataforma** hasta crear al menos su primer negocio.
+  **No hay mecanismo de desactivación de negocios en el MVP** (esa capacidad se
+  fue junto con el rol de administrador de la plataforma).
 - Cada negocio tiene su propio catálogo, proveedores, recursos y políticas, aislados
   de los demás; los gestiona su propietario.
 - **Cliente:** registro autoservicio. Identificador = correo. Datos obligatorios:
@@ -175,7 +177,7 @@ mismo negocio.
 | HU-0009 · Desactivar un proveedor | Si era el único proveedor de un servicio: ¿reservas pendientes de reasignación, canceladas, o se bloquea la desactivación? |
 | HU-0022 · Consultar mi agenda del día | ¿Qué vistas se necesitan (día, semana, lista, calendario)? ¿El propietario ve la agenda de todos los proveedores? |
 | HU-0002 · Iniciar sesión en mi cuenta | ¿A qué pantalla se redirige a un cliente y a un proveedor al iniciar sesión? (el destino del propietario ya está definido) |
-| HU-0042 · Crear mi negocio | ¿Puede el propietario usar la plataforma sin negocio creado todavía? ¿Puede tener más de un negocio con la misma cuenta? |
+| HU-0042 · Crear mi negocio | ¿Cómo selecciona/cambia el propietario entre sus negocios? ¿A cuál se redirige por defecto al iniciar sesión con varios? ¿El aislamiento de datos entre los negocios de un mismo propietario es total? |
 
 ---
 
@@ -263,6 +265,14 @@ por Administrador de la Plataforma, retirado el 2026-09-11.
    para quitar el escenario de Administrador de la Plataforma. Pendiente del
    equipo: replanear Sprint 1 (perdió HU-0027 con sus 5 SP y 5 tasks) y crear
    tasks nuevas para HU-0041/HU-0042.
+9. **2026-09-11 (mismo día)** — Respondidas las 2 preguntas abiertas de HU-0042:
+   el propietario **queda bloqueado** del resto de la plataforma hasta crear su
+   primer negocio, y **sí puede crear más de un negocio** con la misma cuenta (no
+   es un propietario = un negocio). Se agregaron 2 escenarios a HU-0042 (bloqueo
+   sin negocio, creación de un negocio adicional) y sus preguntas abiertas se
+   reemplazaron por 3 nuevas que surgen del multi-negocio por propietario: cómo
+   selecciona/cambia de negocio, a cuál se redirige por defecto al iniciar sesión,
+   y si el aislamiento de datos entre los negocios de un mismo propietario es total.
 
 > Documento generado para acompañar el backlog en Azure DevOps. Mantener sincronizado
 > a mano si se editan work items directamente en Azure.
