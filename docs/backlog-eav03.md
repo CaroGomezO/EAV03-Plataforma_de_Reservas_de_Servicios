@@ -7,11 +7,14 @@ o cerrar el editor.
 
 - **Proceso:** Agile. **Team:** EAV03 Team. Todo cuelga de la raíz `EAV03` (aún sin sprints).
 - **Códigos de título:** `E-01`, `FE-001`, `HU-0001` (separador ` · `).
-- **Estado a 2026-09-11:** 5 épicas · 15 features · 28 historias, todas en estado *New*,
-  con criterios de aceptación en Gherkin (en la descripción y en el campo Acceptance Criteria).
+- **Estado a 2026-09-12:** 5 épicas · 16 features · 29 historias, todas en estado *New*,
+  con criterios de aceptación en Gherkin (en la descripción y en el campo Acceptance
+  Criteria — HU-DEV-01 es la excepción, en HTML). 2 de las 29 HU (FE-017/HU-DEV-01)
+  son herramientas de dev/QA, no HU de negocio para el usuario final.
 - **Terminología:** el administrador de cada negocio se llama **"propietario"**. Ya
   **no existe** el rol "administrador de la plataforma" en el MVP: el registro de
-  negocios es 100% autoservicio (ver punto 8 del historial de cambios).
+  negocios es 100% autoservicio y **sin bloqueo** — acceso inmediato tras registrarse
+  (ver puntos 8 y 10 del historial de cambios).
 - Redactado con el modelo **INVEST + Gherkin** (skill `historias-usuario-invest`), sin
   tecnicismos y sin inventar reglas: lo que falta por decidir está en *Preguntas abiertas*.
 
@@ -26,7 +29,9 @@ o cerrar el editor.
   - HU-0002 · Iniciar sesión en mi cuenta
   - HU-0003 · Recuperar el acceso a mi cuenta
 - **FE-016 · Registro y activación de negocios**
-  - HU-0042 · Crear mi negocio
+  - HU-0042 · Creación de negocio(s)
+- **FE-017 · Herramientas de desarrollo y pruebas** *(tooling de dev/QA, no HU de negocio)*
+  - HU-DEV-01 · [Only Dev] Script de Seeding para Propietario de Prueba (Entorno de Desarrollo)
 
 ### E-02 · Administración del Negocio
 - **FE-002 · Gestión del catálogo de servicios**
@@ -80,19 +85,21 @@ o cerrar el editor.
 - La plataforma es **multi-negocio**: cada negocio (tenant) tiene sus datos
   completamente aislados de los demás. **Ya no existe el rol "administrador de la
   plataforma"** en el MVP (eliminado 2026-09-11).
-- **Registro 100% autoservicio, sin fricción.** No hay ningún admin ni intermediario
-  que apruebe la creación de una cuenta o de un negocio: quedan activos de inmediato.
-- El **propietario** se registra solo (HU-0041) y queda autenticado de inmediato.
-  En el mismo flujo es redirigido a crear su negocio (HU-0042: nombre, dirección,
-  identificación fiscal única, moneda base ISO 4217), que se activa sin aprobación
-  de nadie. El "Usuario Propietario" y el "Negocio" son entidades **completamente
-  separadas** a nivel de datos y arquitectura, aunque la UX las encadena en un
-  único flujo (sin romper la experiencia con dos pasos desconectados).
+- **Registro 100% autoservicio, sin fricción y SIN bloqueo.** No hay ningún admin
+  ni intermediario que apruebe la creación de una cuenta o de un negocio. El
+  **propietario** se registra solo (HU-0041) y queda autenticado con **acceso
+  inmediato** a la plataforma (confirmado 2026-09-12 según el PDF de requisitos:
+  un rol genera su cuenta y accede de una vez, sin gate).
+- Al iniciar sesión como propietario, el sistema lo redirige a su **lista de
+  negocios** (vacía la primera vez). Desde ahí elige crear uno (HU-0042: nombre,
+  dirección, identificación fiscal única, moneda base ISO 4217), que se activa sin
+  aprobación de nadie. El "Usuario Propietario" y el "Negocio" son entidades
+  **completamente separadas** a nivel de datos y arquitectura, aunque la UX las
+  encadena en un flujo fluido.
 - Un negocio tiene un único propietario, pero **un propietario puede tener varios
-  negocios** con la misma cuenta (confirmado 2026-09-11). El propietario queda
-  **bloqueado del resto de la plataforma** hasta crear al menos su primer negocio.
-  **No hay mecanismo de desactivación de negocios en el MVP** (esa capacidad se
-  fue junto con el rol de administrador de la plataforma).
+  negocios** con la misma cuenta, completamente aislados entre sí (catálogo,
+  proveedores, políticas). **No hay mecanismo de desactivación de negocios en el
+  MVP** (esa capacidad se fue junto con el rol de administrador de la plataforma).
 - Cada negocio tiene su propio catálogo, proveedores, recursos y políticas, aislados
   de los demás; los gestiona su propietario.
 - **Cliente:** registro autoservicio. Identificador = correo. Datos obligatorios:
@@ -177,7 +184,7 @@ mismo negocio.
 | HU-0009 · Desactivar un proveedor | Si era el único proveedor de un servicio: ¿reservas pendientes de reasignación, canceladas, o se bloquea la desactivación? |
 | HU-0022 · Consultar mi agenda del día | ¿Qué vistas se necesitan (día, semana, lista, calendario)? ¿El propietario ve la agenda de todos los proveedores? |
 | HU-0002 · Iniciar sesión en mi cuenta | ¿A qué pantalla se redirige a un cliente y a un proveedor al iniciar sesión? (el destino del propietario ya está definido) |
-| HU-0042 · Crear mi negocio | ¿Cómo selecciona/cambia el propietario entre sus negocios? ¿A cuál se redirige por defecto al iniciar sesión con varios? ¿El aislamiento de datos entre los negocios de un mismo propietario es total? |
+| HU-0042 · Creación de negocio(s) | Un propietario con varios negocios, al iniciar sesión, ¿a cuál se le redirige por defecto? |
 
 ---
 
@@ -204,7 +211,7 @@ El código del título **no coincide** con el ID interno de Azure DevOps.
 | FE-005 | 13 | FE-013 | 23 |
 | FE-006 | 14 | FE-014 | 24 |
 | FE-007 | 16 | FE-016 | 90 |
-| FE-008 | 17 | | |
+| FE-008 | 17 | FE-017 | 94 |
 
 ### Historias de usuario
 | Código | ID | Código | ID | Código | ID |
@@ -217,7 +224,7 @@ El código del título **no coincide** con el ID interno de Azure DevOps.
 | HU-0006 | 50 | HU-0016 | 31 | HU-0026 | 64 |
 | HU-0007 | 51 | HU-0017 | 32 | HU-0041 | 91 |
 | HU-0008 | 52 | HU-0018 | 33 | HU-0042 | 92 |
-| HU-0009 | 53 | HU-0019 | 34 | | |
+| HU-0009 | 53 | HU-0019 | 34 | HU-DEV-01 | 93 |
 | HU-0010 | 54 | HU-0020 | 35 | | |
 
 Los IDs 6, 7, 9, 15, 22, 25–30, 38–40, 45–47, 60–61, 65–70, 71–73, 89 son ítems en
@@ -265,14 +272,28 @@ por Administrador de la Plataforma, retirado el 2026-09-11.
    para quitar el escenario de Administrador de la Plataforma. Pendiente del
    equipo: replanear Sprint 1 (perdió HU-0027 con sus 5 SP y 5 tasks) y crear
    tasks nuevas para HU-0041/HU-0042.
-9. **2026-09-11 (mismo día)** — Respondidas las 2 preguntas abiertas de HU-0042:
-   el propietario **queda bloqueado** del resto de la plataforma hasta crear su
-   primer negocio, y **sí puede crear más de un negocio** con la misma cuenta (no
-   es un propietario = un negocio). Se agregaron 2 escenarios a HU-0042 (bloqueo
-   sin negocio, creación de un negocio adicional) y sus preguntas abiertas se
-   reemplazaron por 3 nuevas que surgen del multi-negocio por propietario: cómo
-   selecciona/cambia de negocio, a cuál se redirige por defecto al iniciar sesión,
-   y si el aislamiento de datos entre los negocios de un mismo propietario es total.
+9. **2026-09-11 (mismo día)** — Respondidas las 2 preguntas abiertas de HU-0042
+   como estaban entonces: el propietario quedaba bloqueado hasta crear su primer
+   negocio, y sí puede crear más de un negocio con la misma cuenta. Se agregaron
+   2 escenarios a HU-0042 (bloqueo sin negocio, creación de un negocio adicional).
+   **Nota: el punto 1 fue corregido al día siguiente, ver punto 10.**
+10. **2026-09-12** — La compañera Melissa reescribió **HU-0042** en Azure (título
+    → "Creación de negocio(s)") para alinearla con el PDF de requisitos: introdujo
+    el concepto de **lista de negocios** (destino del redirect al iniciar sesión
+    como propietario, vacía la primera vez) y **quitó el escenario de bloqueo**.
+    El usuario confirmó que esto es correcto: el PDF dice que un rol genera su
+    cuenta y accede de inmediato — el bloqueo habría sido una contradicción. El
+    aislamiento total de datos entre negocios de un mismo propietario quedó
+    confirmado en el AC. Solo sigue abierta la pregunta de a cuál negocio se
+    redirige por defecto si hay varios.
+    También creó **HU-DEV-01** — un script de seed para agilizar las pruebas de
+    HU-0042 (pedido explícitamente así, como HU, por el profesor). Se creó
+    **FE-017 · Herramientas de desarrollo y pruebas** (bajo E-01) como bucket para
+    HU-DEV-XX, se reparentó HU-DEV-01 bajo esa feature (estaba huérfana) y se le
+    agregó el tag "[Only Dev]" al título. Queda en formato HTML, no Markdown +
+    Gherkin como el resto del backlog (así la dejó el profesor/la compañera).
+    Limpieza: HU-0027 y sus tasks (Removed) seguían con IterationPath = Sprint 1;
+    se sacaron del sprint.
 
 > Documento generado para acompañar el backlog en Azure DevOps. Mantener sincronizado
 > a mano si se editan work items directamente en Azure.
